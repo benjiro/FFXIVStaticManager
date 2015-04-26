@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+var app = require('./../app');
+var config = require('./../config/settings');
+
+app.listen(config.port, function() {
+  console.log('Server started on port ' + config.port);
+});
