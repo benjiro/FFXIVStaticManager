@@ -12,28 +12,28 @@ exports.create = function(req, res) {
   loot.turn = req.body.turn;
 
   loot.save(function(err) {
-    if (err) { return res.send(err.message) }
+    if (err) { return res.status(400).send({message:err.message}) }
     return res.json({message:'Loot item created'});
   });
 };
 
 exports.all = function(req, res) {
   Loot.find(function(err, loots) {
-    if (err) { return res.send(err.message) }
+    if (err) { return res.status(400).send({message:err.message}) }
     return res.json(loots);
   });
 };
 
 exports.find = function(req, res) {
   Loot.findById(req.params.id, function(err, loot) {
-    if (err) { return res.send(err.message) }
+    if (err) { return res.status(400).send({message:err.message}) }
     return res.json(loot);
   })
 };
 
 exports.update = function(req, res) {
   Loot.findById(req.params.id, function(err, loot) {
-    if (err) { return res.send('Item doesn\'t exist') }
+    if (err) { return res.send({message:err.message}) }
 
     loot.playerName = req.body.playerName || loot.playerName;
     loot.allocatedBy = req.body.allocatedBy || loot.allocatedBy;
@@ -44,7 +44,7 @@ exports.update = function(req, res) {
     loot.turn = req.body.turn || loot.turn;
 
     loot.save(function(err) {
-      if (err) { return res.send(err.message); }
+      if (err) { return res.status(400).send({message:err.message}); }
       return res.json({message:'Item updated'});
     });
   });
@@ -54,7 +54,7 @@ exports.delete = function(req, res) {
   Loot.remove({
     _id: req.params.id
   }, function(err, loot) {
-    if (err) { return res.send(err.message) }
+    if (err) { return res.status(400).send({message:err.message}) }
     return res.json({message:'Item deleted'})
   });
 };

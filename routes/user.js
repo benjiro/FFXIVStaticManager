@@ -42,9 +42,9 @@ exports.authenticate = function(req, res) {
 
 exports.verify = function(req, res, next) {
   var token = req.headers['authorization'];
-  var part = token.split(' ');
 
   if (token) {
+    var part = token.split(' ');
     jwt.verify(part[1], config.secret, function(err, code) {
       if (err) {
         res.status(403).send({
@@ -100,7 +100,7 @@ exports.all = function(req, res) {
 
 exports.findById = function(req, res) {
   User.findById(req.params.id, function(err, user) {
-    if (err) { return res.status(400).send(err); }
+    if (err) { return res.status(400).json({message: 'No valid user by id'}); }
     res.json(user);
   });
 };
@@ -124,7 +124,7 @@ exports.delete = function(req, res) {
   User.remove({
     _id: req.params.id
   }, function(err, post) {
-    if (err) return { res.status(400).send(err); }
+    if (err) { return res.status(400).send(err); }
     res.json({
       message: 'User deleted!'
     });

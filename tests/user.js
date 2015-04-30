@@ -136,23 +136,23 @@ describe('Put request on /user/:id endpoint', function() {
   });
 
   it('Returns 403 invalid token', function(done) {
-      request(app)
-        .put('/user/invalid')
-        .set('x-access-token', 'dafdfsfs')
-        .send('username=change')
-        .expect(403)
-        .expect('Content-Type', /json/)
-        .expect(/"success":false/)
-        .expect(/"message":"Failed to authenticate token."/, done);
+    request(app)
+      .put('/user/invalid')
+      .set('Authorization', 'dafdfsfs')
+      .send('username=change')
+      .expect(403)
+      .expect('Content-Type', /json/)
+      .expect(/"success":false/)
+      .expect(/"message":"Failed to authenticate token."/, done);
   });
 
   it('Returns 200 if update is successful', function(done) {
-    var id = "";
+    var id = '';
     async.series([
       function(cb) {
         request(app)
           .post('/user')
-          .send('username=Ben&password=test&name=Benjamin')
+          .send('username=Ben&password=test')
           .expect(200, cb);
       },
       function(cb) {
@@ -171,7 +171,7 @@ describe('Put request on /user/:id endpoint', function() {
           .end(function(err, res) {
             request(app)
               .put('/user/' + id)
-              .set('x-access-token', res.body.token)
+              .set('Authorization', 'bearer ' + res.body.token)
               .send('name=John')
               .expect(200)
               .expect('Content-Type', /json/)
@@ -197,7 +197,7 @@ describe('Delete request on /user/:id endpoint', function() {
   it('Returns 403 invalid token', function(done) {
     request(app)
       .delete('/user/invalid')
-      .set('x-access-token', 'dafdfsfs')
+      .set('Authorization', 'dafdfsfs')
       .expect(403)
       .expect('Content-Type', /json/)
       .expect(/"success":false/)
@@ -210,7 +210,7 @@ describe('Delete request on /user/:id endpoint', function() {
       function(cb) {
         request(app)
           .post('/user')
-          .send('username=Ben&password=test&name=Benjamin')
+          .send('username=Ben&password=test')
           .expect(200, cb);
       },
       function(cb) {
@@ -229,7 +229,7 @@ describe('Delete request on /user/:id endpoint', function() {
           .end(function(err, res) {
             request(app)
               .delete('/user/' + id)
-              .set('x-access-token', res.body.token)
+              .set('Authorization', 'bearer ' + res.body.token)
               .expect(200)
               .expect('Content-Type', /json/)
               .expect(/"message":"User deleted!"/, cb);
